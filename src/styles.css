@@ -11,3 +11,18 @@ a { cursor: pointer }
     text-align: center;
     box-sizing: content-box;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.text-nav {
+    color: rgb(170, 169, 169)
+}
+.right {
+    position: absolute;
+    right: 0px;
+    padding: 10px;
+  }
+  .center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }

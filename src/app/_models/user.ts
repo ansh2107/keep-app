@@ -1,8 +1,11 @@
-﻿export class User {
+﻿import { Note } from "./note";
+
+export class User {
     id!: string;
     username!: string;
     password!: string;
     firstName!: string;
     lastName!: string;
     token!: string;
+    notes!: Note[]
 }

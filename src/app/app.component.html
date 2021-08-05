@@ -1,7 +1,16 @@
 <!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="user">
-  <div class="navbar-nav">
-      <a class="nav-item nav-link" (click)="logout()">Logout</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" *ngIf="user">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Keep</a>
+  
+    <div class="collapse navbar-collapse right" id="navbarText">
+      <span class="navbar-text">
+        Hi {{user.firstName}}
+      </span>
+      <span class="navbar-nav">
+        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+      </span>
+    </div>
   </div>
 </nav>
 
