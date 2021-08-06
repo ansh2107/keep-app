@@ -1,28 +1,33 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HomeComponent } from 'src/app/home/home.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AlertComponent } from './_components/alert.component';
+import { AlertComponent } from './alert/alert.component';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { fakeBackendProvider } from './_helpers/fake-backend';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NoteComponent } from './note/note.component';
+import { NotesListComponent } from './notes-list/notes-list.component';
+import { NoteEditComponent } from './note-edit/note-edit.component';
+import { SearchPipe } from './pipes/search.pipe';
+import { MaterialComponentsModule } from './material-components/material-components.module';
+import { NoteCreateComponent } from './note-create/note-create.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    AlertComponent
+    DashboardComponent,
+    NoteComponent,
+    NotesListComponent,
+    NoteEditComponent,
+    AlertComponent,
+    SearchPipe,
+    NoteCreateComponent
   ],
   imports: [
     BrowserModule,
@@ -30,12 +35,8 @@ import { MatCardModule } from '@angular/material/card';
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatExpansionModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatCardModule
+    FormsModule,
+    MaterialComponentsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

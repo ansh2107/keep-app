@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row center">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+          <mat-panel-title>
+              Take a note...
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+    
+      <form (ngSubmit)="onSubmit()">
+        <h3>Create a note</h3>
+        <mat-card-content>
+          <mat-form-field class="form-field">
+            <input 
+              matInput
+              placeholder="Note title"
+              [(ngModel)]="noteTitle"
+              name="noteTitle"
+            >
+          </mat-form-field>
+          <mat-form-field class="form-field">
+            <textarea 
+              matInput
+              placeholder="Note description"
+              [(ngModel)]="noteDescription"
+              name="noteDescription"
+            ></textarea>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions class="edit-actions">
+          <button type="submit" mat-raised-button color="primary">Create</button>
+        </mat-card-actions>
+      </form>
+    
+    </mat-expansion-panel>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<mat-card class="note"> 
+  <button 
+    mat-mini-fab
+    color="primary" 
+    class="delete-button"
+    (click)="onDelete()"
+  >
+    X
+  </button>
+  <div (click)="toEditPage()">
+    <mat-card-header class="note-header">
+      <mat-card-title>{{ note.title }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="note-content">
+      {{ note.description }}
+    </mat-card-content>
+  </div>
+</mat-card>

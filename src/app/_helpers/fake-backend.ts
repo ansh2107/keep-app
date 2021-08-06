@@ -3,10 +3,13 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable, of, throwError } from 'rxjs';
 import { delay, materialize, dematerialize } from 'rxjs/operators';
 import { User } from '../_models/user';
+import { Note } from '../_models/note';
 
 // array in local storage for registered users
 const usersKey = 'keep-app';
+const notesKey = 'keep-app-notes';
 let users = JSON.parse(localStorage.getItem(usersKey) as string) || [];
+let notes = JSON.parse(localStorage.getItem(notesKey) as string) || [];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -21,14 +24,16 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return authenticate();
                 case url.endsWith('/users/register') && method === 'POST':
                     return register();
-                case url.endsWith('/users') && method === 'GET':
-                    return getUsers();
-                case url.match(/\/users\/\d+$/) && method === 'GET':
-                    return getUserById();
-                case url.match(/\/users\/\d+$/) && method === 'PUT':
-                    return updateUser();
-                case url.match(/\/users\/\d+$/) && method === 'DELETE':
-                    return deleteUser();
+                case url.endsWith('/notes/add') && method === 'POST':
+                    return addNote();
+                case url.endsWith('/notes/list') && method === 'POST':
+                    return getNotes();
+                case url.match('/notes') && method === 'PUT':
+                    return updateNote();
+                case url.match(/\/notes\/\d+$/) && method === 'GET':
+                    return getNoteById();
+                case url.match(/\/notes\/\d+$/) && method === 'DELETE':
+                    return deleteNote();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -60,47 +65,72 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
-        function getUsers() {
-            if (!isLoggedIn()) return unauthorized();
-            return ok(users.map((x: any) => basicDetails(x)));
-        }
 
-        function getUserById() {
+        function getNoteById() {
             if (!isLoggedIn()) return unauthorized();
 
-            const user = users.find((x: { id: number; }) => x.id === idFromUrl());
-            return ok(basicDetails(user));
+            const note = notes.find((x: { id: number; }) => x.id === idFromUrl());
+            return ok(note);
         }
 
-        function updateUser() {
+
+
+        function updateNote() {
             if (!isLoggedIn()) return unauthorized();
 
             let params = body;
-            let user = users.find((x: { id: number; }) => x.id === idFromUrl());
+            let note = notes.find((x: { id: number; }) => x.id === params.id);
 
-            // only update password if entered
-            if (!params.password) {
-                delete params.password;
-            }
-
-            // update and save user
-            Object.assign(user, params);
-            localStorage.setItem(usersKey, JSON.stringify(users));
+            // update and save note
+            Object.assign(note, params);
+            localStorage.setItem(notesKey, JSON.stringify(notes));
 
             return ok();
         }
 
-        function deleteUser() {
+        function deleteNote() {
             if (!isLoggedIn()) return unauthorized();
 
-            users = users.filter((x: { id: number; }) => x.id !== idFromUrl());
-            localStorage.setItem(usersKey, JSON.stringify(users));
+            notes = notes.filter((x: { id: number; }) => x.id !== idFromUrl());
+            localStorage.setItem(notesKey, JSON.stringify(notes));
             return ok();
+        }
+
+        function addNote() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            params.Note.userId = params.userId;
+            if (notes?.length > 0) {
+                params.Note.id = genNoteId(notes);
+                notes.push(params.Note);
+            } else {
+                notes = [];
+                params.Note.id = genNoteId(notes);
+                notes.push(params.Note);
+            }
+
+            // update and save user
+            localStorage.setItem(notesKey, JSON.stringify(notes));
+
+            return ok();
+        }
+
+        function getNotes() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let notesByUserId: Note[] = notes.filter((x: { userId: number; }) => x.userId === params.userId);
+            return ok(notesByUserId);
+        }
+
+        function genNoteId(notes: Note[]): number {
+            return notes.length > 0 ? Math.max(...notes.map(note => note.id)) + 1 : 11;
         }
 
         // helper functions
 
-        function ok(body?: { token?: string; id: string; username: string; firstName: string; lastName: string; } | undefined) {
+        function ok(body?: any) {
             return of(new HttpResponse({ status: 200, body }))
                 .pipe(delay(500)); // delay observable to simulate server api call
         }
@@ -116,8 +146,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function basicDetails(user: User) {
-            const { id, username, firstName, lastName } = user;
-            return { id, username, firstName, lastName };
+            const { id, username, firstName, lastName} = user;
+            return { id, username, firstName, lastName};
         }
 
         function isLoggedIn() {

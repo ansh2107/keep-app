@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NoteEditComponent } from './note-edit/note-edit.component';
 import { AuthGuard } from './_services/auth.guard';
 
-
-
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
-const notesModule = () => import('./notes/notes.module').then(x => x.NotesModule);
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-   /*  { path: '', loadChildren: notesModule, canActivate: [AuthGuard] }, */
-    { path: 'account', loadChildren: accountModule },
+{path: '',component: DashboardComponent, canActivate: [AuthGuard]},
+{ path: 'edit/:id', component: NoteEditComponent, canActivate: [AuthGuard] },
+{ path: 'account', loadChildren: accountModule },
 
-    // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+// otherwise redirect to home
+{ path: '**', redirectTo: '' }
 ];
 
 @NgModule({
