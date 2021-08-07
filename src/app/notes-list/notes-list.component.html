@@ -3,13 +3,15 @@
     <input matInput placeholder="Search" [(ngModel)]="searchTerm">
   </mat-form-field>
 </div>
-<mat-grid-list cols="5" rowHeight="170px" class="grid-list">
-  <mat-grid-tile
-      *ngFor="let note of notes | search:searchTerm">
-    <note 
+
+<div class="content">
+  <div fxLayout="row wrap" fxLayoutGap="12px grid">
+    <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%"  *ngFor="let note of notes | search:searchTerm">
+      <note 
       [note]="note"
       [noteChange]="noteChange"
       [deleteNote]="deleteNote"
     ></note>
-  </mat-grid-tile>
-</mat-grid-list>
+    </div>
+  </div>
+  </div>

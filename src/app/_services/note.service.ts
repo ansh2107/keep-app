@@ -20,10 +20,10 @@ export class NoteService {
     private accountService: AccountService
   ) {
     this.user = this.accountService.userValue;
-   }
+  }
 
   /** GET Notes from the server */
-  getNotes (userId: string): Observable<Note[]> {
+  getNotes(userId: string): Observable<Note[]> {
     return this.http.post<Note[]>(`${this.NotesUrl}/list`, { userId });
   }
 
@@ -45,12 +45,12 @@ export class NoteService {
   //////// Save methods //////////
 
   /** POST: add a new Note to the server */
-  addNote (Note: Note, userId: string): Observable<Note> {
-    return this.http.post<Note>(`${this.NotesUrl}/add`, { Note, userId});
+  addNote(Note: Note, userId: string): Observable<Note> {
+    return this.http.post<Note>(`${this.NotesUrl}/add`, { Note, userId });
   }
 
   /** DELETE: delete the Note from the server */
-  deleteNote (Note: Note | number): Observable<Note> {
+  deleteNote(Note: Note | number): Observable<Note> {
     const id = typeof Note === 'number' ? Note : Note.id;
     const url = `${this.NotesUrl}/${id}`;
 
@@ -58,7 +58,22 @@ export class NoteService {
   }
 
   /** PUT: update the Note on the server */
-  updateNote (Note: Note): Observable<Note> {
+  updateNote(Note: Note): Observable<Note> {
     return this.http.put<Note>(this.NotesUrl, Note);
+  }
+
+  getImageSrc(event: any): Observable<string> {
+    return new Observable((observer) => {
+      const reader = new FileReader();
+
+      if (event.target.files && event.target.files.length) {
+        const [file] = event.target.files;
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const noteImageSrc = reader.result as string;
+          observer.next(noteImageSrc);
+        };
+      }
+    });
   }
 }

@@ -41,4 +41,8 @@ export class NoteEditComponent implements OnInit {
     this.noteService.updateNote(this.note)
       .subscribe(() => this.goBack());
   }
+
+  onFileChanged(event) {
+    this.noteService.getImageSrc(event).subscribe((imageSrc) => {this.note.image = imageSrc});
+  }
 }

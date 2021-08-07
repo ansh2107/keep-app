@@ -17,6 +17,7 @@ import { NoteEditComponent } from './note-edit/note-edit.component';
 import { SearchPipe } from './pipes/search.pipe';
 import { MaterialComponentsModule } from './material-components/material-components.module';
 import { NoteCreateComponent } from './note-create/note-create.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { NoteCreateComponent } from './note-create/note-create.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    MaterialComponentsModule
+    MaterialComponentsModule,
+    FlexLayoutModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -11,6 +11,8 @@ export class NoteComponent implements OnInit {
   @Input() note: Note;
   @Input() noteChange: Function;
   @Input() deleteNote: Function;
+  isListContent = false;
+  isLinks = false;
 
   constructor(private router: Router) { }
 
