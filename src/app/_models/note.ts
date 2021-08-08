@@ -1,4 +1,5 @@
 import { GridsterItem } from "angular-gridster2";
+import { Todo } from "./todo";
 
 export class Note {
     id!: number;
@@ -7,5 +8,5 @@ export class Note {
     description!: string;
     image!: string;
     links!: string[];
-    lists!: string[];
+    list!: Todo[];
 }

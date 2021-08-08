@@ -15,8 +15,10 @@ export class NoteComponent implements OnInit {
   isLinks = false;
 
   constructor(private router: Router) { }
+  isListMode: boolean
 
   ngOnInit() {
+    this.isListMode = this.note?.list?.length > 0;
   }
 
   onDelete(): void {

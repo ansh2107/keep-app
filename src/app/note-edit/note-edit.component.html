@@ -1,23 +1,46 @@
 <h1 class="heading">Edit your note</h1>
-<mat-card *ngIf="note" class="note-edit">
-  <button mat-mini-fab color="primary" class="delete-button" (click)="delete()">
-    <mat-icon>delete_forever</mat-icon>
-  </button>
-  <img mat-card-image class="center" *ngIf="note.image" [src]="note.image" style="height: 300px; width:500px">
-  <mat-card-content>
+<ng-container *ngIf="!isListMode">
+  <mat-card *ngIf="note" class="note-edit">
+    <img mat-card-image class="center" *ngIf="note.image" [src]="note.image" style="height: 300px; width:500px">
+    <mat-card-content>
+      <mat-form-field class="note-edit-input">
+        <input matInput placeholder="Title" [(ngModel)]="note.title" >
+      </mat-form-field>
+      <mat-form-field class="note-edit-input">
+        <input matInput placeholder="Description" [ngModel]="note.description | linkify" (ngModelChange)="note.description=$event" >
+      </mat-form-field>
+      <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+    </mat-card-content>
+    <mat-card-actions class="note-actions">
+      <button  type="button"mat-stroked-button color="primary" *ngIf="!note.image" (click)="fileInput.click()">Add Image</button>
+      <button  type="button" mat-stroked-button color="primary" *ngIf="note.image" (click)="note.image = ''">Remove Image</button>
+    </mat-card-actions>
+    <mat-card-actions class="note-actions">
+      <button mat-stroked-button color="primary" (click)="save()">Save</button>
+      <button mat-stroked-button color="primary" (click)="delete()">Delete</button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
+<ng-container *ngIf="isListMode">
+  <section style="width: 50%;" class="todoapp center">
     <mat-form-field class="note-edit-input">
       <input matInput placeholder="Title" [(ngModel)]="note.title" >
     </mat-form-field>
-    <mat-form-field class="note-edit-input">
-      <input matInput placeholder="Description" [(ngModel)]="note.description" >
-    </mat-form-field>
-    <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-  </mat-card-content>
-  <mat-card-actions class="note-actions">
-    <button *ngIf="!note.image" (click)="fileInput.click()">Image</button>
-    <button mat-stroked-button color="primary" *ngIf="note.image" (click)="note.image = ''">Remove Image</button>
-  </mat-card-actions>
-  <mat-card-actions class="note-actions">
-    <button mat-stroked-button color="primary" (click)="save()">Save</button>
-  </mat-card-actions>
-</mat-card>
+    <section style="height: 200px;" class="main" *ngIf="todos.length > 0">
+      <ul class="todo-list sub-menu">
+        <li *ngFor="let todo of todos" [class.completed]="todo.complete">
+          <div class="view">
+            <input class="toggle" type="checkbox" (click)="toggleTodoComplete(todo)" [checked]="todo.complete">
+            <label>{{todo.title}}</label>
+            <button class="destroy" (click)="removeTodo(todo)"></button>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </section>
+  <footer class="center edit-actions ">
+    <button style="margin: 8px;"  mat-stroked-button color="primary" (click)="save()">Save</button>
+    <button style="margin: 8px;" mat-stroked-button color="primary" (click)="delete()">Delete</button>
+
+  </footer>
+</ng-container>

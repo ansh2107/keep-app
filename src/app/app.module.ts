@@ -18,6 +18,7 @@ import { SearchPipe } from './pipes/search.pipe';
 import { MaterialComponentsModule } from './material-components/material-components.module';
 import { NoteCreateComponent } from './note-create/note-create.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { LinkifyPipe } from './pipes/linkify.pipe';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     NoteEditComponent,
     AlertComponent,
     SearchPipe,
-    NoteCreateComponent
+    NoteCreateComponent,
+    LinkifyPipe
   ],
   imports: [
     BrowserModule,

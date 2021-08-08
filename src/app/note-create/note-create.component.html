@@ -8,26 +8,56 @@
       </mat-expansion-panel-header>
 
       <form (ngSubmit)="onSubmit()">
-        <img mat-card-image *ngIf="noteImageSrc" [src]="noteImageSrc" style="height: 300px; width:500px">
-        <mat-card-content>
-          <mat-form-field class="form-field">
-            <input matInput placeholder="Note title" [(ngModel)]="noteTitle" name="noteTitle">
-          </mat-form-field>
-          <mat-form-field class="form-field">
-            <textarea matInput placeholder="Note description" [(ngModel)]="noteDescription"
-              name="noteDescription"></textarea>
-            <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-actions class="edit-actions">
-          <button *ngIf="!noteImageSrc" (click)="fileInput.click()">Image</button>
-          <button mat-stroked-button color="primary" *ngIf="noteImageSrc" (click)="noteImageSrc = ''">Remove Image</button>
-        </mat-card-actions>
-        <mat-card-actions class="edit-actions">
-          <button type="submit" mat-raised-button color="primary">Create</button>
-        </mat-card-actions>
+        <ng-container *ngIf="!isListMode">
+          <img mat-card-image *ngIf="noteImageSrc" [src]="noteImageSrc" style="height: 300px; width:500px">
+          <mat-card-content>
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Note title" [(ngModel)]="noteTitle" name="noteTitle">
+            </mat-form-field>
+            <mat-form-field class="form-field">
+              <textarea matInput placeholder="Note description" name="noteDescription"
+                [ngModel]="noteDescription | linkify" (ngModelChange)="noteDescription=$event"></textarea>
+              <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions class="edit-actions">
+            <button style="margin: 8px;"  type="button" *ngIf="!noteImageSrc" mat-stroked-button color="primary" 
+              (click)="$event.stopPropagation();fileInput.click()">Add Image</button>
+            <button style="margin: 8px;"  type="button" mat-stroked-button color="primary" *ngIf="noteImageSrc"
+              (click)="noteImageSrc = ''">Remove Image</button>
+            <button style="margin: 8px;" type="button" mat-stroked-button color="primary" (click)="isListMode = true">Create List</button>
+          </mat-card-actions>
+          <mat-card-actions class="edit-actions">
+            <button style="margin: 8px;" type="submit" mat-raised-button color="primary">Create Note</button>
+          </mat-card-actions>
+        </ng-container>
       </form>
-
+      <ng-container *ngIf="isListMode">
+        <section class="todoapp">
+          <header class="header">
+            <mat-form-field class="form-field">
+              <input matInput placeholder="Note title" [(ngModel)]="noteTitle" name="noteTitle">
+            </mat-form-field>
+            <input style="width: 400px;" class="new-todo" placeholder="What needs to be done?" autofocus=""
+              [ngModelOptions]="{standalone: true}" [(ngModel)]="newTodo.title" (keyup.enter)="addTodo()">
+          </header>
+          <section style="height: 200px;" class="main" *ngIf="todos.length > 0">
+            <ul class="todo-list sub-menu">
+              <li *ngFor="let todo of todos" [class.completed]="todo.complete">
+                <div class="view">
+                  <input class="toggle" type="checkbox" (click)="toggleTodoComplete(todo)" [checked]="todo.complete">
+                  <label>{{todo.title}}</label>
+                  <button class="destroy" (click)="removeTodo(todo)"></button>
+                </div>
+              </li>
+            </ul>
+          </section>
+        </section>
+        <footer class="card-body">
+          <button style="margin: 8px;" type="button" mat-stroked-button color="primary" (click)="isListMode = false">Change to Note</button>
+          <button style="margin: 8px;" type="button" mat-raised-button color="primary"(click)="onSubmit()" >Create Note</button>
+        </footer>
+      </ng-container>
     </mat-expansion-panel>
   </div>
 </div>
